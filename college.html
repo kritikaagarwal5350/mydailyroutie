@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>College Student Routine</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #fdfbfb, #ebedee);
+      margin: 0;
+      padding: 40px;
+    }
+
+    .container {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 15px;
+      max-width: 750px;
+      margin: auto;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    label {
+      font-weight: bold;
+      margin-top: 15px;
+      display: block;
+    }
+
+    input, select, button, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    #routine-box {
+      background: #f9f9f9;
+      padding: 20px;
+      margin-top: 20px;
+      border-radius: 10px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>🎓 College Student Routine Setup</h2>
+
+  <label for="year">Select Your Year / Semester:</label>
+  <select id="year">
+    <option value="">Select</option>
+    <option>1st Year</option>
+    <option>2nd Year</option>
+    <option>3rd Year</option>
+    <option>4th Year</option>
+    <option>Semester 1</option>
+    <option>Semester 2</option>
+    <option>Semester 3</option>
+    <option>Semester 4</option>
+    <option>Semester 5</option>
+    <option>Semester 6</option>
+    <option>Semester 7</option>
+    <option>Semester 8</option>
+  </select>
+
+  <label for="subjects">Enter your subjects (comma-separated):</label>
+  <input type="text" id="subjects" placeholder="e.g. Physics, Economics, History, Java Programming">
+
+  <label for="class-time">Your Daily College Timing:</label>
+  <select id="class-time">
+    <option value="">Select</option>
+    <option>7 AM – 12 PM</option>
+    <option>8 AM – 1 PM</option>
+    <option>9 AM – 2 PM</option>
+    <option>10 AM – 3 PM</option>
+    <option>11 AM – 4 PM</option>
+    <option>12 PM – 5 PM</option>
+    <option>1 PM – 6 PM</option>
+  </select>
+
+  <label for="study-hours">How many hours can you study daily (after college)?</label>
+  <input type="number" id="study-hours" placeholder="e.g. 2, 3, 4">
+
+  <label for="extra-course">Are you preparing for any extra course? (Optional)</label>
+  <input type="text" id="extra-course" placeholder="e.g. IELTS, CAT, GATE, Web Development">
+
+  <button onclick="generateCollegeRoutine()">Generate Routine</button>
+
+  <div id="routine-box">
+    <h3>📅 Suggested Routine:</h3>
+    <p id="routine-details"></p>
+  </div>
+</div>
+
+<script>
+  function generateCollegeRoutine() {
+    const year = document.getElementById("year").value;
+    const subjectInput = document.getElementById("subjects").value.trim();
+    const classTime = document.getElementById("class-time").value;
+    const studyHours = document.getElementById("study-hours").value.trim();
+    const extraCourse = document.getElementById("extra-course").value.trim();
+
+    if (!year || !subjectInput || !classTime || !studyHours) {
+      alert("Please fill all required fields.");
+      return;
+    }
+
+    const subjects = subjectInput.split(",").map(s => s.trim()).filter(Boolean);
+    if (subjects.length === 0) {
+      alert("Please enter at least one subject.");
+      return;
+    }
+
+    const today = new Date().getDay();
+    const subjectForToday = subjects[today % subjects.length];
+    const perSubject = (studyHours / subjects.length).toFixed(1);
+
+    let msg = `
+      🎓 Year/Semester: <b>${year}</b><br>
+      🏫 College Timing: <b>${classTime}</b><br>
+      🕓 Daily Study Time: <b>${studyHours} hrs</b><br>
+      📚 Subjects: <b>${subjects.join(", ")}</b><br><br>
+      ✅ Suggested Subject to Focus on Today: <b>${subjectForToday}</b><br>
+      📌 You can spend ~<b>${perSubject} hrs</b> on each subject across the week.
+    `;
+
+    if (extraCourse) {
+      msg += `<br>🚀 Extra Course Preparation: <b>${extraCourse}</b>`;
+    }
+
+    document.getElementById("routine-details").innerHTML = msg;
+    document.getElementById("routine-box").style.display = "block";
+  }
+</script>
+
+</body>
+</html>

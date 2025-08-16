@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Custom Routine Generator</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #fff3e0);
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #3e2723;
+    }
+
+    label {
+      display: block;
+      margin-top: 20px;
+      font-weight: bold;
+      color: #4e342e;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1em;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px 20px;
+      font-size: 16px;
+      background: #4e342e;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #3e2723;
+    }
+
+    #routine-box {
+      margin-top: 30px;
+      background: #efebe9;
+      padding: 20px;
+      border-radius: 15px;
+      display: none;
+    }
+
+    .slot {
+      margin-top: 15px;
+      padding: 10px;
+      background: #ffffff;
+      border-left: 5px solid #6d4c41;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>📝 Daily Routine for Any Profession</h2>
+
+  <label for="occupation">Enter your occupation:</label>
+  <input type="text" id="occupation" placeholder="e.g., Artist, Photographer, Dancer...">
+
+  <label for="tasks">List your main daily tasks (one per line):</label>
+  <textarea id="tasks" rows="5" placeholder="e.g.,\nMorning jog\nClient meeting\nPractice...\nSkill learning"></textarea>
+
+  <button onclick="generateCustomRoutine()">Generate Routine</button>
+  <button onclick="setCustomReminders()">Set Reminders</button>
+
+  <div id="routine-box">
+    <h3>📋 Your Suggested Routine</h3>
+    <div id="routine-output"></div>
+  </div>
+</div>
+
+<script>
+  function generateCustomRoutine() {
+    const occupation = document.getElementById("occupation").value.trim();
+    const tasks = document.getElementById("tasks").value.trim().split("\n");
+
+    if (!occupation || tasks.length === 0 || !tasks[0]) {
+      alert("Please enter your occupation and at least one task.");
+      return;
+    }
+
+    let output = `<h4>🧑‍💼 Occupation: ${occupation}</h4>`;
+    tasks.forEach((task, index) => {
+      const hour = 7 + index * 2;
+      const formattedHour = hour < 10 ? "0" + hour : hour;
+      output += `<div class="slot"><strong>${formattedHour}:00</strong> - ${task}</div>`;
+    });
+
+    document.getElementById("routine-output").innerHTML = output;
+    document.getElementById("routine-box").style.display = "block";
+  }
+
+  function setCustomReminders() {
+    if (!("Notification" in window)) {
+      alert("Notifications not supported.");
+      return;
+    }
+
+    Notification.requestPermission().then(permission => {
+      if (permission !== "granted") {
+        alert("Please allow notification permission.");
+        return;
+      }
+
+      const tasks = document.getElementById("tasks").value.trim().split("\n");
+      const now = new Date();
+
+      tasks.forEach((task, i) => {
+        const reminderTime = new Date();
+        reminderTime.setHours(7 + i * 2, 0, 0, 0); // Starting from 7:00 AM
+        let delay = reminderTime - now;
+        if (delay < 0) delay += 86400000;
+
+        setTimeout(() => {
+          new Notification("🔔 Reminder", {
+            body: task,
+            icon: "https://cdn-icons-png.flaticon.com/512/2343/2343694.png"
+          });
+        }, delay);
+      });
+
+      alert("Reminders set for your tasks!");
+    });
+  }
+</script>
+
+</body>
+</html>

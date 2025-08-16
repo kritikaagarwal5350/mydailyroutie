@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Discipline App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f4f8;
+      text-align: center;
+      padding: 50px;
+    }
+
+    .card {
+      background-color: white;
+      padding: 30px 30px 40px;
+      border-radius: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      max-width: 500px;
+      margin: auto;
+      text-align: center;
+      position: relative;
+    }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .logo {
+      width: 60px;
+    }
+
+    .menu {
+      display: flex;
+      gap: 15px;
+    }
+
+    .menu a {
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+      font-size: 14px;
+      padding: 5px 10px;
+      border-radius: 8px;
+      transition: background 0.3s;
+    }
+
+    .menu a:hover {
+      background-color: #e0e0e0;
+    }
+
+    h1 {
+      color: #333;
+      margin-top: 20px;
+      font-size: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .yes-btn {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .no-btn {
+      background-color: #f44336;
+      color: white;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    
+    <!-- Logo and Menu Row -->
+    <div class="top-bar">
+      <img src="app logo.png" alt="App Logo" class="logo">
+      <div class="menu">
+        <a href="#">Home</a>
+        <a href="#">Routine</a>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+
+    <h1>Do you want to maintain your discipline?</h1>
+    <button class="yes-btn" onclick="showMessage('yes')">Yes</button>
+    <button class="no-btn" onclick="showMessage('no')">No</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    function showMessage(answer) {
+      const result = document.getElementById('result');
+      if (answer === 'yes') {
+        result.textContent = "Great! Let's build your routine together.";
+        setTimeout(() => {
+          window.location.href = "link.html";
+        }, 2000);
+      } else {
+        result.textContent = "Discipline is the bridge between goals and success!";
+      }
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Farmer Routine Planner</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #f1ffe7, #dcedc8);
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #33691e;
+    }
+
+    label {
+      display: block;
+      margin-top: 20px;
+      font-weight: bold;
+      color: #33691e;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1em;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px 20px;
+      font-size: 16px;
+      background: #689f38;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #33691e;
+    }
+
+    #routine-box {
+      margin-top: 30px;
+      background: #e6ee9c;
+      padding: 20px;
+      border-radius: 15px;
+      display: none;
+    }
+
+    .slot {
+      margin-top: 15px;
+      padding: 10px;
+      background: #f1f8e9;
+      border-left: 5px solid #558b2f;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>🌾 Farmer Daily Routine Planner</h2>
+
+  <label for="land">Land Size (in acres/hectares):</label>
+  <input type="text" id="land" placeholder="e.g., 5 acres">
+
+  <label for="crop">Main Crop Type:</label>
+  <input type="text" id="crop" placeholder="e.g., Wheat, Rice, Vegetables">
+
+  <label for="livestock">Do you have livestock?</label>
+  <select id="livestock">
+    <option>Yes</option>
+    <option>No</option>
+  </select>
+
+  <label for="market">Market Visit Time (if any):</label>
+  <input type="text" id="market" placeholder="e.g., 5 PM">
+
+  <label for="irrigation">Irrigation Timing:</label>
+  <input type="text" id="irrigation" placeholder="e.g., 6 AM or 6 PM">
+
+  <label for="harvest">Harvesting Season or Daily Work:</label>
+  <textarea id="harvest" rows="3" placeholder="e.g., Start harvesting tomatoes, prune sugarcane..."></textarea>
+
+  <button onclick="generateFarmerRoutine()">Generate Routine</button>
+  <button onclick="setFarmerAlarms()">Set Reminders</button>
+
+  <div id="routine-box">
+    <h3>📋 Suggested Routine</h3>
+    <div id="routine-details"></div>
+  </div>
+</div>
+
+<script>
+  function generateFarmerRoutine() {
+    const land = document.getElementById("land").value;
+    const crop = document.getElementById("crop").value;
+    const livestock = document.getElementById("livestock").value;
+    const market = document.getElementById("market").value;
+    const irrigation = document.getElementById("irrigation").value;
+    const harvest = document.getElementById("harvest").value;
+
+    const details = document.getElementById("routine-details");
+    let html = "";
+
+    html += `<div class="slot"><strong>👨‍🌾 Land:</strong> ${land}</div>`;
+    html += `<div class="slot"><strong>🌱 Crop:</strong> ${crop}</div>`;
+    html += `<div class="slot"><strong>💧 Irrigation:</strong> ${irrigation}</div>`;
+    if (livestock === "Yes") {
+      html += `<div class="slot"><strong>🐄 Livestock Care:</strong> Morning feed at 7 AM, Cleaning at 4 PM</div>`;
+    }
+    if (harvest.trim()) {
+      html += `<div class="slot"><strong>🚜 Harvest Plan:</strong> ${harvest}</div>`;
+    }
+    if (market.trim()) {
+      html += `<div class="slot"><strong>🛒 Market Visit:</strong> ${market}</div>`;
+    }
+
+    html += `<div class="slot"><strong>🧘 Breaks:</strong> Tea at 10:30 AM, Lunch at 1 PM, Rest at 2 PM</div>`;
+    html += `<div class="slot"><strong>🌇 Evening:</strong> Tool checkup, family time, planning for next day</div>`;
+
+    document.getElementById("routine-box").style.display = "block";
+    details.innerHTML = html;
+  }
+
+  function setFarmerAlarms() {
+    if (!("Notification" in window)) {
+      alert("Browser does not support notifications.");
+      return;
+    }
+
+    Notification.requestPermission().then(permission => {
+      if (permission !== "granted") {
+        alert("Please allow notifications.");
+        return;
+      }
+
+      const now = new Date();
+      const reminders = [
+        { task: "💧 Time for irrigation!", time: "06:00" },
+        { task: "🐄 Feed livestock", time: "07:00" },
+        { task: "☕ Tea Break", time: "10:30" },
+        { task: "🍽️ Lunch Time", time: "13:00" },
+        { task: "🧼 Clean livestock area", time: "16:00" },
+        { task: "🛒 Market Visit", time: "17:00" },
+        { task: "📋 Plan tomorrow's work", time: "20:00" }
+      ];
+
+      reminders.forEach(r => {
+        const [hr, min] = r.time.split(":").map(Number);
+        const alarmTime = new Date();
+        alarmTime.setHours(hr, min, 0, 0);
+
+        let delay = alarmTime - now;
+        if (delay < 0) delay += 24 * 60 * 60 * 1000;
+
+        setTimeout(() => {
+          new Notification("🔔 Reminder", {
+            body: r.task,
+            icon: "https://cdn-icons-png.flaticon.com/512/2282/2282143.png"
+          });
+        }, delay);
+      });
+
+      alert("Farmer Reminders Set Successfully!");
+    });
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Select Occupation - Routine App</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #fdfbfb, #ebedee);
+      margin: 0;
+      padding: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      background: white;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      max-width: 600px;
+      width: 90%;
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 25px;
+      color: #333;
+    }
+    .occupation-button {
+      display: block;
+      width: 100%;
+      margin: 8px 0;
+      padding: 12px;
+      font-size: 1em;
+      border: none;
+      border-radius: 25px;
+      background-color: #6c63ff;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .occupation-button:hover {
+      background-color: #574fd6;
+    }
+    #other-box {
+      display: none;
+      margin-top: 20px;
+    }
+    #other-input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+    }
+    #continue-btn {
+      background-color: #6c63ff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+    #continue-btn:hover {
+      background-color: #574fd6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>What is your Occupation?</h2>
+
+    <button class="occupation-button" onclick="selectOccupation('Student')">Student</button>
+    <button class="occupation-button" onclick="selectOccupation('Housewife')">Housewife / Homemaker</button>
+    <button class="occupation-button" onclick="selectOccupation('Businessman')">Businessman / Entrepreneur</button>
+    <button class="occupation-button" onclick="selectOccupation('Job')">Job / Service</button>
+    <button class="occupation-button" onclick="selectOccupation('Freelancer')">Freelancer</button>
+    <button class="occupation-button" onclick="selectOccupation('Retired')">Retired</button>
+    <button class="occupation-button" onclick="selectOccupation('Teacher')">Teacher</button>
+    <button class="occupation-button" onclick="selectOccupation('Doctor')">Doctor / Medical</button>
+    <button class="occupation-button" onclick="selectOccupation('Engineer')">Engineer / IT</button>
+    <button class="occupation-button" onclick="selectOccupation('Farmer')">Farmer</button>
+    <button class="occupation-button" onclick="selectOccupation('Unemployed')">Unemployed / Searching</button>
+    <button class="occupation-button" onclick="selectOccupation('Other')">Other</button>
+    <!-- <button class="occupation-button" onclick="showOther()">Other</button> -->
+
+    <div id="other-box">
+      <input type="text" id="other-input" placeholder="Enter your occupation">
+      <br>
+      <button id="continue-btn" onclick="saveOther()">Continue</button>
+    </div>
+  </div>
+
+  <script>
+    function selectOccupation(occupation) {
+      localStorage.setItem("userOccupation", occupation);
+
+      if (occupation.toLowerCase() === 'student') {
+        window.location.href = "sdudent.html"; // Your student page
+      } 
+      else if (occupation.toLowerCase() === 'housewife') {
+        window.location.href = "housewife.html"; // The housewife routine generator file
+      }
+      else if (occupation.toLowerCase() === 'businessman') {
+        window.location.href = "bussinesman.html"; // The housewife routine generator file
+      }
+      else if (occupation.toLowerCase() === 'job') {
+        window.location.href = "job.html"; // The housewife routine generator file
+      }
+      else if (occupation.toLowerCase() === 'freelancer') {
+        window.location.href = "freelancer.html"; // The housewife routine generator file
+      }
+      else if (occupation.toLowerCase() === 'retired') {
+        window.location.href = "retiered.html"; // The housewife routine generator file
+      }
+      else if (occupation.toLowerCase() === 'teacher') {
+        window.location.href = "teacher.html"; // The housewife routine generator file
+      }
+      else if (occupation.toLowerCase() === 'doctor') {
+        window.location.href = "doctor.html"; // The housewife routine generator file
+      }
+      else if (occupation.toLowerCase() === 'engineer') {
+        window.location.href = "Engineer.html"; // The housewife routine generator file
+      }
+      else if (occupation.toLowerCase() === 'farmer') {
+        window.location.href = "farmer.html"; // The housewife routine generator file
+      }
+      else if (occupation.toLowerCase() === 'unemployed') {
+        window.location.href = "unemployed.html"; // The housewife routine generator file
+      }
+      else if (occupation.toLowerCase() === 'other') {
+        window.location.href = "others.html"; // The housewife routine generator file
+      }
+      else {
+        alert("Redirect not set yet for " + occupation);
+      }
+    }
+
+    // function showOther() {
+    //   document.getElementById("other-box").style.display = "block";
+    // }
+
+    // function saveOther() {
+    //   const custom = document.getElementById("other-input").value.trim();
+    //   if (custom !== "") {
+    //     localStorage.setItem("userOccupation", custom);
+    //     alert("Redirect not set yet for: " + custom);
+    //   } else {
+    //     alert("Please enter your occupation.");
+    //   }
+    // }
+  </script>
+</body>
+</html>

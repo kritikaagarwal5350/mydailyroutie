@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>School Student Details - Routine App</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #e0c3fc, #8ec5fc);
+      margin: 0;
+      padding: 40px;
+    }
+
+    .container {
+      background-color: white;
+      padding: 30px;
+      border-radius: 15px;
+      max-width: 700px;
+      margin: auto;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    .logo {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      width: 50px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-top: 60px; /* Push heading below the logo */
+    }
+
+    label {
+      display: block;
+      margin: 15px 0 5px;
+      font-weight: bold;
+    }
+
+    select, input[type="text"], button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+    }
+
+    .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .checkbox-group label {
+      font-weight: normal;
+      display: flex;
+      align-items: center;
+      background: #f5f5f5;
+      padding: 6px 10px;
+      border-radius: 10px;
+    }
+
+    .checkbox-group input {
+      margin-right: 6px;
+    }
+
+    #routine {
+      margin-top: 20px;
+      background: #f0f8ff;
+      padding: 20px;
+      border-radius: 10px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- 🖼️ App Logo -->
+    <img src="app logo.png" alt="App Logo" class="logo">
+
+    <h2>School Student Details</h2>
+
+    <label for="class">Select Your Class:</label>
+    <select id="class">
+      <option value="">Select</option>
+      <option>Nursery</option>
+      <option>LKG</option>
+      <option>UKG</option>
+      <option>1</option>
+      <option>2</option>
+      <option>3</option>
+      <option>4</option>
+      <option>5</option>
+      <option>6</option>
+      <option>7</option>
+      <option>8</option>
+      <option>9</option>
+      <option>10</option>
+      <option>11</option>
+      <option>12</option>
+    </select>
+
+    <label>Select Subjects You Are Studying:</label>
+    <div class="checkbox-group" id="subject-list">
+      <!-- Subjects -->
+      <label><input type="checkbox" value="English"> English</label>
+      <label><input type="checkbox" value="Hindi"> Hindi</label>
+      <label><input type="checkbox" value="Sanskrit"> Sanskrit</label>
+      <label><input type="checkbox" value="Urdu"> Urdu</label>
+      <label><input type="checkbox" value="Math"> Math</label>
+      <label><input type="checkbox" value="EVS"> EVS</label>
+      <label><input type="checkbox" value="Physics"> Physics</label>
+      <label><input type="checkbox" value="Chemistry"> Chemistry</label>
+      <label><input type="checkbox" value="Biology"> Biology</label>
+      <label><input type="checkbox" value="History"> History</label>
+      <label><input type="checkbox" value="Geography"> Geography</label>
+      <label><input type="checkbox" value="Civics"> Civics</label>
+      <label><input type="checkbox" value="Political Science"> Political Science</label>
+      <label><input type="checkbox" value="Psychology"> Psychology</label>
+      <label><input type="checkbox" value="Sociology"> Sociology</label>
+      <label><input type="checkbox" value="Economics"> Economics</label>
+      <label><input type="checkbox" value="Business Studies"> Business Studies</label>
+      <label><input type="checkbox" value="Accountancy"> Accountancy</label>
+      <label><input type="checkbox" value="Computer"> Computer</label>
+      <label><input type="checkbox" value="Art"> Art</label>
+      <label><input type="checkbox" value="Physical Education"> Physical Education</label>
+    </div>
+
+    <label>Subjects You Take Tuition For:</label>
+    <input type="text" id="tuition-subjects" placeholder="e.g. Math, English">
+
+    <button onclick="generateRoutine()">Generate Routine</button>
+
+    <div id="routine">
+      <h3>📚 Suggested Routine:</h3>
+      <p id="study-suggestion"></p>
+      <p id="tuition-suggestion"></p>
+    </div>
+  </div>
+
+  <script>
+    function generateRoutine() {
+      const studentClass = document.getElementById("class").value;
+      const subjects = [...document.querySelectorAll("#subject-list input:checked")].map(cb => cb.value);
+      const tuitionSubjects = document.getElementById("tuition-subjects").value.trim();
+
+      if (!studentClass || subjects.length === 0) {
+        alert("Please select your class and at least one subject.");
+        return;
+      }
+
+      const day = new Date().getDay();
+      const index = day % subjects.length;
+      const todaySubject = subjects[index];
+
+      document.getElementById("study-suggestion").innerText =
+        `📖 Today, focus on studying: ${todaySubject}`;
+
+      document.getElementById("tuition-suggestion").innerText =
+        tuitionSubjects
+          ? `📝 You are taking tuition for: ${tuitionSubjects}`
+          : "You have not mentioned any tuition subjects.";
+
+      document.getElementById("routine").style.display = "block";
+    }
+  </script>
+
+</body>
+</html>

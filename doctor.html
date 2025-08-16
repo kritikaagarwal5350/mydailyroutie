@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Doctor Routine Planner</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #80deea);
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #00796b;
+    }
+
+    label {
+      display: block;
+      margin-top: 20px;
+      font-weight: bold;
+      color: #004d40;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1em;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px 20px;
+      font-size: 16px;
+      background: #00796b;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #004d40;
+    }
+
+    #routine-box {
+      margin-top: 30px;
+      background: #f1f8e9;
+      padding: 20px;
+      border-radius: 15px;
+      display: none;
+    }
+
+    .slot {
+      margin-top: 15px;
+      padding: 10px;
+      background: #e8f5e9;
+      border-left: 5px solid #43a047;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>🩺 Doctor Daily Routine Planner</h2>
+
+  <label for="specialty">Select Your Specialization:</label>
+  <select id="specialty">
+    <option value="General Practitioner">General Practitioner</option>
+    <option value="Surgeon">Surgeon</option>
+    <option value="Pediatrician">Pediatrician</option>
+    <option value="Dermatologist">Dermatologist</option>
+    <option value="Psychiatrist">Psychiatrist</option>
+    <option value="Dentist">Dentist</option>
+    <option value="Other">Other</option>
+  </select>
+
+  <label for="clinicHours">Clinic/OPD Hours:</label>
+  <input type="text" id="clinicHours" placeholder="e.g., 9:00 AM - 12:00 PM & 5:00 PM - 8:00 PM">
+
+  <label for="hospitalDuties">Hospital Duties (rounds, surgeries):</label>
+  <textarea id="hospitalDuties" rows="3" placeholder="e.g., Morning rounds at 7 AM, surgery at 2 PM"></textarea>
+
+  <label for="extraNotes">Extra Notes (telemedicine, research, rest):</label>
+  <textarea id="extraNotes" rows="3" placeholder="e.g., Teleconsultation at 4 PM, reading medical journals at 9 PM"></textarea>
+
+  <button onclick="generateRoutine()">Generate Routine</button>
+  <button onclick="setDoctorAlarms()">Set Reminders</button>
+
+  <div id="routine-box">
+    <h3>📋 Suggested Routine</h3>
+    <div id="routine-details"></div>
+  </div>
+</div>
+
+<script>
+  function generateRoutine() {
+    const specialty = document.getElementById("specialty").value;
+    const clinicHours = document.getElementById("clinicHours").value;
+    const hospitalDuties = document.getElementById("hospitalDuties").value;
+    const extraNotes = document.getElementById("extraNotes").value;
+
+    const box = document.getElementById("routine-box");
+    const details = document.getElementById("routine-details");
+
+    let html = `<div class="slot"><strong>🧑‍⚕️ Specialization:</strong> ${specialty}</div>`;
+    html += `<div class="slot"><strong>🏥 Clinic/OPD Hours:</strong> ${clinicHours}</div>`;
+
+    if (hospitalDuties.trim()) {
+      html += `<div class="slot"><strong>🏨 Hospital Duties:</strong> ${hospitalDuties}</div>`;
+    }
+
+    if (extraNotes.trim()) {
+      html += `<div class="slot"><strong>🧠 Additional Notes:</strong> ${extraNotes}</div>`;
+    }
+
+    html += `<div class="slot"><strong>☕ Self-Care Time:</strong> Eat well, hydrate, rest properly.</div>`;
+
+    details.innerHTML = html;
+    box.style.display = "block";
+  }
+
+  function setDoctorAlarms() {
+    if (!("Notification" in window)) {
+      alert("Browser does not support notifications.");
+      return;
+    }
+
+    Notification.requestPermission().then(permission => {
+      if (permission !== "granted") {
+        alert("Please allow notifications.");
+        return;
+      }
+
+      const now = new Date();
+      const reminders = [
+        { task: "🏥 Time for hospital rounds", time: "07:00" },
+        { task: "🩺 Begin clinic consultations", time: "09:00" },
+        { task: "🧑‍⚕️ Surgery or procedures", time: "14:00" },
+        { task: "💬 Teleconsultation session", time: "16:00" },
+        { task: "🛌 Evening rest or journaling", time: "21:00" }
+      ];
+
+      reminders.forEach(reminder => {
+        const [hr, min] = reminder.time.split(":").map(Number);
+        const alarmTime = new Date();
+        alarmTime.setHours(hr, min, 0, 0);
+
+        let delay = alarmTime - now;
+        if (delay < 0) delay += 24 * 60 * 60 * 1000;
+
+        setTimeout(() => {
+          new Notification("🔔 Reminder", {
+            body: reminder.task,
+            icon: "https://cdn-icons-png.flaticon.com/512/3524/3524659.png"
+          });
+        }, delay);
+      });
+
+      alert("Doctor reminders set!");
+    });
+  }
+</script>
+
+</body>
+</html>

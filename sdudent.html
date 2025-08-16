@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Type Selection</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f1f8e9;
+      padding: 40px;
+    }
+
+    .box {
+      max-width: 700px;
+      background: white;
+      padding: 30px;
+      margin: auto;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    label {
+      display: block;
+      margin: 20px 0 5px;
+      font-weight: bold;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 12px 20px;
+      background-color: #558b2f;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #33691e;
+    }
+
+    #schoolForm, #collegeForm, #routineBox {
+      display: none;
+      margin-top: 20px;
+    }
+
+    .routine {
+      background: #e8f5e9;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="box">
+  <h2>🎓 Student Routine Generator</h2>
+
+  <label>Are you a school or college student?</label>
+  <select id="studentType" onchange="showForm()">
+    <option value="">--Select--</option>
+    <option value="school">School Student</option>
+    <option value="college">College Student</option>
+  </select>
+
+  <!-- School Form -->
+  <div id="schoolForm">
+    <label>Enter your class (Nursery - 12):</label>
+    <input type="text" id="schoolClass" placeholder="e.g., 5, 10, UKG, etc.">
+
+    <label>Subjects you're learning:</label>
+    <textarea id="schoolSubjects" placeholder="e.g., English, Science, History..."></textarea>
+
+    <label>Subjects you take tuition for:</label>
+    <textarea id="schoolTuitions" placeholder="e.g., Maths, Science..."></textarea>
+
+    <button onclick="generateSchoolRoutine()">Generate School Routine</button>
+  </div>
+
+  <!-- College Form -->
+  <div id="collegeForm">
+    <label>Enter your degree/course:</label>
+    <input type="text" id="collegeCourse" placeholder="e.g., B.Sc CS, BCom, BA...">
+
+    <label>Subjects you're studying:</label>
+    <textarea id="collegeSubjects" placeholder="e.g., Economics, Programming, Accounts..."></textarea>
+
+    <label>Are you preparing for any extra course?</label>
+    <input type="text" id="collegeExtra" placeholder="e.g., CAT, GATE, CA, etc.">
+
+    <button onclick="generateCollegeRoutine()">Generate College Routine</button>
+  </div>
+
+  <!-- Routine Output -->
+  <div id="routineBox">
+    <h3>Your Suggested Routine</h3>
+    <div id="routineOutput" class="routine"></div>
+  </div>
+</div>
+
+<script>
+  function showForm() {
+    const type = document.getElementById("studentType").value;
+    document.getElementById("schoolForm").style.display = type === "school" ? "block" : "none";
+    document.getElementById("collegeForm").style.display = type === "college" ? "block" : "none";
+    document.getElementById("routineBox").style.display = "none";
+  }
+
+  function generateSchoolRoutine() {
+    const cls = document.getElementById("schoolClass").value;
+    const subjects = document.getElementById("schoolSubjects").value.split(",");
+    const tuitions = document.getElementById("schoolTuitions").value.split(",");
+
+    let output = `<strong>Class:</strong> ${cls}<br>`;
+    output += `<strong>Study Plan:</strong><ul>`;
+    subjects.forEach((subj, i) => {
+      output += `<li>${subj.trim()} - ${7 + i * 2}:00 AM</li>`;
+    });
+    output += `</ul>`;
+
+    if (tuitions.length > 0 && tuitions[0].trim() !== "") {
+      output += `<strong>Tuitions:</strong><ul>`;
+      tuitions.forEach((t, i) => {
+        output += `<li>${t.trim()} - ${5 + i * 2}:00 PM</li>`;
+      });
+      output += `</ul>`;
+    }
+
+    document.getElementById("routineOutput").innerHTML = output;
+    document.getElementById("routineBox").style.display = "block";
+  }
+
+  function generateCollegeRoutine() {
+    const course = document.getElementById("collegeCourse").value;
+    const subjects = document.getElementById("collegeSubjects").value.split(",");
+    const extra = document.getElementById("collegeExtra").value;
+
+    let output = `<strong>Course:</strong> ${course}<br>`;
+    output += `<strong>Study Subjects:</strong><ul>`;
+    subjects.forEach((subj, i) => {
+      output += `<li>${subj.trim()} - ${9 + i * 2}:00 AM</li>`;
+    });
+    output += `</ul>`;
+
+    if (extra.trim() !== "") {
+      output += `<strong>Extra Prep:</strong> ${extra} - 6:00 PM daily`;
+    }
+
+    document.getElementById("routineOutput").innerHTML = output;
+    document.getElementById("routineBox").style.display = "block";
+  }
+</script>
+
+</body>
+</html>

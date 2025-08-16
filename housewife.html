@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Housewife Routine Generator</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #fdfbfb, #ebedee);
+      margin: 0;
+      padding: 40px 20px;
+    }
+
+    .container {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 18px;
+      max-width: 800px;
+      margin: auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #444;
+    }
+
+    label {
+      font-weight: 600;
+      margin-top: 15px;
+      display: block;
+      color: #333;
+    }
+
+    input, textarea, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1em;
+    }
+
+    .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      display: none;
+    }
+
+    .checkbox-group label {
+      background: #ffe0b2;
+      padding: 8px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    .checkbox-group input:checked + label {
+      background-color: #ff7043;
+      color: white;
+    }
+
+    #routine-box {
+      background: #fefefe;
+      margin-top: 25px;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      display: none;
+    }
+
+    .slot {
+      margin-top: 20px;
+      padding: 10px 15px;
+      border-left: 6px solid #ff7043;
+      background-color: #fffaf0;
+      border-radius: 8px;
+    }
+
+    .slot h4 {
+      margin: 0 0 8px;
+      color: #333;
+    }
+
+    .tip {
+      margin-top: 15px;
+      font-style: italic;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>🏡 Housewife Routine Generator with Time Slots</h2>
+
+  <label>Select your daily responsibilities:</label>
+  <div class="checkbox-group">
+    <input type="checkbox" id="cook" value="Cooking"><label for="cook">🍳 Cooking</label>
+    <input type="checkbox" id="clean" value="Cleaning"><label for="clean">🧹 Cleaning</label>
+    <input type="checkbox" id="childcare" value="Childcare"><label for="childcare">👶 Childcare</label>
+    <input type="checkbox" id="laundry" value="Laundry"><label for="laundry">🧺 Laundry</label>
+    <input type="checkbox" id="puja" value="Puja/Prayer"><label for="puja">🕉️ Puja</label>
+    <input type="checkbox" id="exercise" value="Exercise"><label for="exercise">🏃‍♀️ Exercise</label>
+    <input type="checkbox" id="grocery" value="Grocery Shopping"><label for="grocery">🛒 Grocery</label>
+    <input type="checkbox" id="others-task" value="Other"><label for="others-task">➕ Other</label>
+  </div>
+
+  <label for="free-hours">Available Free Hours (per day):</label>
+  <input type="number" id="free-hours" placeholder="e.g. 4 or 5">
+
+  <label for="goal">✨ Any personal goal or hobby?</label>
+  <input type="text" id="goal" placeholder="e.g. Learn English, Stitching, Online Job">
+
+  <button onclick="generateRoutine()">Generate My Routine</button>
+
+  <div id="routine-box">
+    <h3>📋 Your Suggested Routine with Time Slots</h3>
+    <div id="routine-details"></div>
+    <div class="tip">💡 Tip: Add relaxation and “me-time” to your routine for a happy day!</div>
+  </div>
+</div>
+
+<script>
+  function generateRoutine() {
+    const checkedTasks = Array.from(document.querySelectorAll('.checkbox-group input:checked'))
+      .map(cb => cb.value);
+    const freeTime = parseFloat(document.getElementById("free-hours").value);
+    const goal = document.getElementById("goal").value;
+
+    if (checkedTasks.length === 0 || isNaN(freeTime) || freeTime <= 0) {
+      alert("Please select at least one task and enter valid free hours.");
+      return;
+    }
+
+    const slots = {
+      "🌅 Morning (6 AM - 9 AM)": ["Puja/Prayer", "Exercise", "Cooking"],
+      "☀️ Midday (10 AM - 1 PM)": ["Cleaning", "Childcare", "Laundry"],
+      "🌇 Evening (4 PM - 7 PM)": ["Grocery Shopping", "Childcare", "Dinner Prep"],
+      "🌙 Night (8 PM - 10 PM)": ["Other"]
+    };
+
+    let output = "";
+
+    for (const [slotName, slotTasks] of Object.entries(slots)) {
+      const matched = checkedTasks.filter(task => slotTasks.includes(task));
+      if (matched.length > 0) {
+        output += `<div class="slot"><h4>${slotName}</h4>`;
+        matched.forEach(task => {
+          output += `– ${task}<br>`;
+        });
+        output += `</div>`;
+      }
+    }
+
+    // Add remaining unmatched tasks
+    const remaining = checkedTasks.filter(task =>
+      !Object.values(slots).flat().includes(task)
+    );
+    if (remaining.length > 0) {
+      output += `<div class="slot"><h4>🕰️ Flexible Time</h4>`;
+      remaining.forEach(task => {
+        output += `– ${task}<br>`;
+      });
+      output += `</div>`;
+    }
+
+    if (goal.trim()) {
+      output += `<div class="slot"><h4>🌙 Night Hobby Time</h4>– Spend 30–45 mins on: <b>${goal}</b></div>`;
+    }
+
+    document.getElementById("routine-details").innerHTML = output;
+    document.getElementById("routine-box").style.display = "block";
+  }
+</script>
+
+</body>
+</html>

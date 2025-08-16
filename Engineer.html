@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Engineer Routine Planner</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #f1f8ff, #bbdefb);
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #0d47a1;
+    }
+
+    label {
+      display: block;
+      margin-top: 20px;
+      font-weight: bold;
+      color: #0d47a1;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1em;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px 20px;
+      font-size: 16px;
+      background: #1976d2;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0d47a1;
+    }
+
+    #routine-box {
+      margin-top: 30px;
+      background: #e3f2fd;
+      padding: 20px;
+      border-radius: 15px;
+      display: none;
+    }
+
+    .slot {
+      margin-top: 15px;
+      padding: 10px;
+      background: #e8eaf6;
+      border-left: 5px solid #3949ab;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>👷 Engineer Daily Routine Planner</h2>
+
+  <label for="eng-type">Select Your Field:</label>
+  <select id="eng-type">
+    <option>Software Engineer</option>
+    <option>Mechanical Engineer</option>
+    <option>Civil Engineer</option>
+    <option>Electrical Engineer</option>
+    <option>Electronics Engineer</option>
+    <option>Chemical Engineer</option>
+    <option>Aerospace Engineer</option>
+    <option>Other</option>
+  </select>
+
+  <label for="workHours">Work/Office Hours:</label>
+  <input type="text" id="workHours" placeholder="e.g., 9:30 AM - 6:00 PM">
+
+  <label for="projects">Current Projects or Work Focus:</label>
+  <textarea id="projects" rows="3" placeholder="e.g., Building microservices, Testing prototypes, Site inspection..."></textarea>
+
+  <label for="learning">Certifications / Skill Building:</label>
+  <textarea id="learning" rows="3" placeholder="e.g., AWS Training, AutoCAD course, Machine learning..."></textarea>
+
+  <button onclick="generateEngineerRoutine()">Generate Routine</button>
+  <button onclick="setEngineerAlarms()">Set Reminders</button>
+
+  <div id="routine-box">
+    <h3>📋 Suggested Routine</h3>
+    <div id="routine-details"></div>
+  </div>
+</div>
+
+<script>
+  function generateEngineerRoutine() {
+    const type = document.getElementById("eng-type").value;
+    const work = document.getElementById("workHours").value;
+    const projects = document.getElementById("projects").value;
+    const learning = document.getElementById("learning").value;
+
+    const box = document.getElementById("routine-box");
+    const details = document.getElementById("routine-details");
+
+    let html = `<div class="slot"><strong>🛠 Field:</strong> ${type}</div>`;
+    html += `<div class="slot"><strong>🏢 Work Hours:</strong> ${work}</div>`;
+
+    if (projects.trim()) {
+      html += `<div class="slot"><strong>🔧 Focus:</strong> ${projects}</div>`;
+    }
+
+    if (learning.trim()) {
+      html += `<div class="slot"><strong>📚 Learning Goals:</strong> ${learning}</div>`;
+    }
+
+    html += `<div class="slot"><strong>☕ Breaks:</strong> Tea Break at 11 AM, Lunch at 1 PM, Short walk at 4 PM.</div>`;
+    html += `<div class="slot"><strong>🧘 Evening:</strong> Workout / Rest / Hobby time</div>`;
+
+    details.innerHTML = html;
+    box.style.display = "block";
+  }
+
+  function setEngineerAlarms() {
+    if (!("Notification" in window)) {
+      alert("Browser does not support notifications.");
+      return;
+    }
+
+    Notification.requestPermission().then(permission => {
+      if (permission !== "granted") {
+        alert("Please allow notifications.");
+        return;
+      }
+
+      const now = new Date();
+      const reminders = [
+        { task: "🔧 Time to check project updates", time: "10:00" },
+        { task: "🍽️ Lunch Break", time: "13:00" },
+        { task: "👨‍💻 Skill Practice or Course Work", time: "19:00" },
+        { task: "🛌 Wind down and relax", time: "22:00" }
+      ];
+
+      reminders.forEach(reminder => {
+        const [hr, min] = reminder.time.split(":").map(Number);
+        const alarmTime = new Date();
+        alarmTime.setHours(hr, min, 0, 0);
+
+        let delay = alarmTime - now;
+        if (delay < 0) delay += 24 * 60 * 60 * 1000;
+
+        setTimeout(() => {
+          new Notification("🔔 Reminder", {
+            body: reminder.task,
+            icon: "https://cdn-icons-png.flaticon.com/512/3063/3063827.png"
+          });
+        }, delay);
+      });
+
+      alert("Engineer reminders set!");
+    });
+  }
+</script>
+
+</body>
+</html>

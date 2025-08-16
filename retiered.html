@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Retired Person Routine</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #f0f9ff, #fefefe);
+      padding: 40px 20px;
+      margin: 0;
+    }
+
+    .container {
+      background-color: white;
+      max-width: 800px;
+      margin: auto;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+    }
+
+    label {
+      font-weight: bold;
+      margin-top: 15px;
+      display: block;
+      color: #34495e;
+    }
+
+    input, select, button, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1em;
+    }
+
+    .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      display: none;
+    }
+
+    .checkbox-group label {
+      background: #ecf0f1;
+      padding: 10px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    .checkbox-group input:checked + label {
+      background-color: #3498db;
+      color: white;
+    }
+
+    #routine-box {
+      background: #fcfcfc;
+      margin-top: 25px;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      display: none;
+    }
+
+    .slot {
+      margin-top: 20px;
+      padding: 10px 15px;
+      border-left: 6px solid #27ae60;
+      background-color: #f0fff4;
+      border-radius: 8px;
+    }
+
+    .slot h4 {
+      margin: 0 0 8px;
+      color: #2d3436;
+    }
+
+    .tip {
+      margin-top: 15px;
+      font-style: italic;
+      color: #636e72;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>🧓 Retired Person Daily Routine Planner</h2>
+
+  <label>Select Your Activities/Interests:</label>
+  <div class="checkbox-group">
+    <input type="checkbox" id="walking" value="Morning Walk"><label for="walking">🚶 Morning Walk</label>
+    <input type="checkbox" id="reading" value="Reading"><label for="reading">📖 Reading</label>
+    <input type="checkbox" id="gardening" value="Gardening"><label for="gardening">🌱 Gardening</label>
+    <input type="checkbox" id="yoga" value="Yoga"><label for="yoga">🧘 Yoga</label>
+    <input type="checkbox" id="meditation" value="Meditation"><label for="meditation">🕉️ Meditation</label>
+    <input type="checkbox" id="devotion" value="Prayer / Devotion"><label for="devotion">🙏 Devotion</label>
+    <input type="checkbox" id="family" value="Spending Time with Family"><label for="family">👪 Family Time</label>
+    <input type="checkbox" id="other" value="Other"><label for="other">➕ Other</label>
+  </div>
+
+  <label for="goal">🎯 Any Personal Goal or Learning (Optional)</label>
+  <input type="text" id="goal" placeholder="e.g., learning harmonium, storytelling, memory games">
+
+  <button onclick="generateRoutine()">Generate Routine</button>
+  <button onclick="setAlarms()">Set Reminders</button>
+
+  <div id="routine-box">
+    <h3>📋 Suggested Daily Routine</h3>
+    <div id="routine-details"></div>
+    <div class="tip">💡 Tip: Stay active mentally and physically. Enjoy your freedom!</div>
+  </div>
+</div>
+
+<script>
+  function generateRoutine() {
+    const checkedTasks = Array.from(document.querySelectorAll('.checkbox-group input:checked'))
+      .map(cb => cb.value);
+    const goal = document.getElementById("goal").value.trim();
+
+    if (checkedTasks.length === 0) {
+      alert("Please select at least one activity.");
+      return;
+    }
+
+    const routineSuggestions = {
+      "🌞 Morning (6 AM - 9 AM)": ["Morning Walk", "Yoga", "Prayer / Devotion"],
+      "📖 Mid-Morning (9 AM - 11 AM)": ["Reading", "Gardening"],
+      "🍽️ Afternoon (12 PM - 2 PM)": ["Family Time", "Other"],
+      "🧘 Evening (4 PM - 6 PM)": ["Meditation", "Gardening"],
+      "🎯 Personal Time (7 PM - 8 PM)": ["Reading", "Other"]
+    };
+
+    let output = "";
+
+    for (const [slot, tasks] of Object.entries(routineSuggestions)) {
+      const matched = checkedTasks.filter(task => tasks.includes(task));
+      if (matched.length > 0) {
+        output += `<div class="slot"><h4>${slot}</h4>`;
+        matched.forEach(task => {
+          output += `– ${task}<br>`;
+        });
+        output += `</div>`;
+      }
+    }
+
+    if (goal) {
+      output += `<div class="slot"><h4>📌 Goal Time</h4>– Spend some time on: <b>${goal}</b></div>`;
+    }
+
+    document.getElementById("routine-details").innerHTML = output;
+    document.getElementById("routine-box").style.display = "block";
+  }
+
+  function setAlarms() {
+    if (!("Notification" in window)) {
+      alert("Browser doesn't support notifications.");
+      return;
+    }
+
+    Notification.requestPermission().then(permission => {
+      if (permission !== "granted") {
+        alert("Please allow notifications.");
+        return;
+      }
+
+      const now = new Date();
+      const reminders = [
+        { task: "🧘 Time for Morning Yoga or Prayer", time: "06:30" },
+        { task: "📖 Time to Read or Journal", time: "09:00" },
+        { task: "🌱 Gardening or Light Activity", time: "11:00" },
+        { task: "👪 Family Time", time: "13:00" },
+        { task: "🕉️ Meditation & Relaxation", time: "17:00" },
+        { task: "🎯 Personal Learning Goal", time: "19:30" }
+      ];
+
+      reminders.forEach(reminder => {
+        const [hours, minutes] = reminder.time.split(":").map(Number);
+        const reminderTime = new Date();
+        reminderTime.setHours(hours, minutes, 0, 0);
+
+        let delay = reminderTime - now;
+        if (delay < 0) delay += 24 * 60 * 60 * 1000;
+
+        setTimeout(() => {
+          new Notification("🔔 Reminder", {
+            body: reminder.task,
+            icon: "https://cdn-icons-png.flaticon.com/512/1995/1995574.png"
+          });
+        }, delay);
+      });
+
+      alert("Reminders set successfully!");
+    });
+  }
+</script>
+
+</body>
+</html>

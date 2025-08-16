@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Teacher Routine Planner</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #eef2f3, #8e9eab);
+      margin: 0;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 20px;
+      color: #34495e;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1em;
+    }
+
+    .subjects {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .subjects input[type="checkbox"] {
+      display: none;
+    }
+
+    .subjects label {
+      padding: 10px 15px;
+      background: #ecf0f1;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    .subjects input:checked + label {
+      background: #3498db;
+      color: white;
+    }
+
+    #routine-box {
+      margin-top: 30px;
+      background: #fefefe;
+      padding: 20px;
+      border-radius: 15px;
+      display: none;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    }
+
+    .slot {
+      margin-top: 15px;
+      padding: 10px;
+      border-left: 5px solid #2980b9;
+      background: #f0faff;
+      border-radius: 8px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px 20px;
+      font-size: 16px;
+      background: #2980b9;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1f6390;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>👩‍🏫 Teacher Daily Routine Planner</h2>
+
+  <label>Select Subjects You Teach:</label>
+  <div class="subjects">
+    <input type="checkbox" id="english" value="English"><label for="english">📘 English</label>
+    <input type="checkbox" id="maths" value="Maths"><label for="maths">➗ Maths</label>
+    <input type="checkbox" id="science" value="Science"><label for="science">🧪 Science</label>
+    <input type="checkbox" id="history" value="History"><label for="history">📜 History</label>
+    <input type="checkbox" id="computer" value="Computer"><label for="computer">💻 Computer</label>
+    <input type="checkbox" id="other" value="Other"><label for="other">➕ Other</label>
+  </div>
+
+  <label for="classTimes">Enter Your Class Schedule (e.g., 9AM - 1PM):</label>
+  <input type="text" id="classTimes" placeholder="e.g., 9:00 AM to 1:00 PM">
+
+  <label for="extraWork">Extra Tasks (e.g., grading, lesson planning):</label>
+  <textarea id="extraWork" rows="3" placeholder="e.g., Grade papers at 4 PM, Plan lessons at 6 PM"></textarea>
+
+  <button onclick="generateRoutine()">Generate Routine</button>
+  <button onclick="setTeacherAlarms()">Set Reminders</button>
+
+  <div id="routine-box">
+    <h3>📋 Suggested Routine</h3>
+    <div id="routine-details"></div>
+  </div>
+</div>
+
+<script>
+  function generateRoutine() {
+    const subjects = Array.from(document.querySelectorAll('.subjects input:checked')).map(cb => cb.value);
+    const classTimes = document.getElementById("classTimes").value;
+    const extraWork = document.getElementById("extraWork").value.trim();
+    const box = document.getElementById("routine-box");
+    const details = document.getElementById("routine-details");
+
+    if (subjects.length === 0 || !classTimes) {
+      alert("Please fill all required fields.");
+      return;
+    }
+
+    let html = `<div class="slot"><h4>🕘 Class Time:</h4> ${classTimes}</div>`;
+    html += `<div class="slot"><h4>📚 Subjects:</h4> ${subjects.join(", ")}</div>`;
+
+    if (extraWork) {
+      html += `<div class="slot"><h4>📝 Extra Work:</h4> ${extraWork}</div>`;
+    }
+
+    html += `<div class="slot"><h4>☕ Self Time:</h4> Relax, read, or prepare for the next day.</div>`;
+
+    details.innerHTML = html;
+    box.style.display = "block";
+  }
+
+  function setTeacherAlarms() {
+    if (!("Notification" in window)) {
+      alert("Browser does not support notifications.");
+      return;
+    }
+
+    Notification.requestPermission().then(permission => {
+      if (permission !== "granted") {
+        alert("Please allow notifications.");
+        return;
+      }
+
+      const reminders = [
+        { task: "👩‍🏫 Start your classes", time: "09:00" },
+        { task: "📄 Time for grading or planning", time: "16:00" },
+        { task: "📖 Quiet time or reading", time: "20:00" }
+      ];
+
+      const now = new Date();
+      reminders.forEach(reminder => {
+        const [hr, min] = reminder.time.split(":").map(Number);
+        const reminderTime = new Date();
+        reminderTime.setHours(hr, min, 0, 0);
+        let delay = reminderTime - now;
+        if (delay < 0) delay += 24 * 60 * 60 * 1000;
+
+        setTimeout(() => {
+          new Notification("🔔 Reminder", {
+            body: reminder.task,
+            icon: "https://cdn-icons-png.flaticon.com/512/1995/1995574.png"
+          });
+        }, delay);
+      });
+
+      alert("Teacher routine reminders set!");
+    });
+  }
+</script>
+
+</body>
+</html>
